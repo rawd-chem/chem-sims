@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سباق الهالوجينات · محاكاة تفاعلات الإحلال</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F1C38;--navy2:#1B2B52;--teal:#39C2B2;--teal-d:#1A8F83;--mint:#7FE3D6;--ink:#14203B;--muted:#5B6A86;--line:#DCE5F0;--bench:#F4F7FB}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bench);color:var(--ink);font-family:Tajawal,system-ui,sans-serif}
+button{font-family:inherit}
+header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:18px 22px 16px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;inset:auto -60px -90px auto;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(57,194,178,.35),transparent 70%)}
+.hwrap{max-width:1120px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;position:relative;z-index:1}
+.kicker{color:var(--mint);font-weight:700;font-size:14px;letter-spacing:.2px}
+h1{margin:2px 0 4px;font-size:clamp(22px,3.2vw,32px);font-weight:900}
+.sub{color:#C9D7E8;font-size:15px;margin:0}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 12px 6px 14px;font-size:14px}
+.step b{width:24px;height:24px;border-radius:50%;background:var(--teal-d);display:grid;place-items:center;font-size:13px}
+main{max-width:1120px;margin:0 auto;padding:16px 16px 28px;display:grid;grid-template-columns:1fr 320px;gap:16px}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 24px rgba(15,28,56,.06)}
+.ctitle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.ctitle h2{margin:0;font-size:17px;font-weight:800}
+.hint{color:var(--muted);font-size:14px}
+/* reagent shelf */
+.shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px 16px}
+.bottle{border:2px solid var(--line);background:#fff;border-radius:16px;padding:10px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;position:relative}
+.bottle:hover{transform:translateY(-2px)}
+.bottle.sel{border-color:var(--teal);box-shadow:0 0 0 4px rgba(57,194,178,.18)}
+.bottle.sel::after{content:"مختار";position:absolute;top:8px;left:8px;background:var(--teal-d);color:#fff;font-size:12px;font-weight:700;border-radius:999px;padding:1px 9px}
+.bottle .nm{font-weight:800;font-size:16px}
+.bottle .fm{font-weight:700;color:var(--muted);direction:ltr;font-size:15px}
+/* bench */
+.bench{padding:10px 12px 6px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-items:end;background:linear-gradient(#fff 0%,#fff 82%,#EEF3F9 82%,#E3EAF4 100%);border-radius:0 0 18px 18px}
+.tube{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:6px 2px;border-radius:14px;position:relative}
+.tube.sel{background:rgba(57,194,178,.08)}
+.tube svg{width:min(92px,100%);height:auto;overflow:visible}
+.tl{font-weight:800;font-size:15px;text-align:center}
+.tl small{display:block;color:var(--muted);font-weight:500;font-size:12.5px}
+.tag{min-height:24px;font-size:12.5px;font-weight:700;border-radius:999px;padding:2px 9px;background:#F2F6FB;color:var(--muted);text-align:center}
+.tag.on{background:#FFF3D6;color:#7A4B00}
+.ctl{display:flex;gap:8px;padding:10px 16px 14px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:800;font-size:15px;cursor:pointer}
+.btn.pri{background:var(--teal-d);color:#fff}
+.btn.ghost{background:#EEF3F9;color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+/* side */
+.side{display:flex;flex-direction:column;gap:16px}
+.lens{padding:12px 14px 14px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.lensbox{width:240px;height:240px;border-radius:50%;border:8px solid var(--navy);box-shadow:0 0 0 3px var(--teal),inset 0 0 30px rgba(15,28,56,.15);overflow:hidden;background:#F8FBFF;position:relative}
+.lensbox canvas{width:100%;height:100%;display:block}
+.lensbox .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:14px;padding:30px}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:13.5px;width:100%}
+.lg{display:flex;align-items:center;gap:6px}
+.dot{width:14px;height:14px;border-radius:50%;flex:none;border:1.5px solid rgba(0,0,0,.15)}
+.pair{display:inline-flex;gap:0}
+.pair .dot+.dot{margin-inline-start:-4px}
+.lenscap{font-weight:700;font-size:14px;text-align:center;min-height:22px}
+.note{padding:12px 16px;font-size:14px;line-height:1.75;color:#33405E}
+.note b{color:var(--ink)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--navy);color:#fff;padding:10px 18px;border-radius:12px;font-weight:700;font-size:15px;opacity:0;transition:.25s;pointer-events:none;z-index:9;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{text-align:center;color:#8A96AD;font-size:12.5px;padding:0 16px 22px}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+/* drop animation */
+.drop{position:fixed;width:12px;height:16px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;pointer-events:none;z-index:8;transition:transform .55s cubic-bezier(.5,0,.9,.6),opacity .2s}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div>
+      <div class="kicker">الكيمياء التفاعلية · كيمياء 1 · الفصل 4</div>
+      <h1>سباق الهالوجينات: أيها يحل محل الآخر؟</h1>
+      <p class="sub">محاكاة تفاعلات الإحلال البسيط بين الهالوجينات ومحاليل أملاح البوتاسيوم</p>
+    </div>
+    <div class="steps" aria-label="طريقة الاستعمال">
+      <div class="step"><b>1</b>اختر هالوجينًا</div>
+      <div class="step"><b>2</b>اضغط على أنبوب لإضافة قطرات</div>
+      <div class="step"><b>3</b>قارن اللون بأنبوب الماء</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card" aria-label="منضدة العمل">
+    <div class="ctitle"><h2>رف المواد</h2><span class="hint" id="pickHint">اختر الهالوجين الذي ستضيفه</span></div>
+    <div class="shelf" id="shelf"></div>
+    <div class="ctitle" style="border-top:1px solid var(--line)"><h2>الأنابيب</h2><span class="hint">أنبوب الماء المقطر للمقارنة: يُظهر لون الهالوجين نفسه دون تفاعل</span></div>
+    <div class="bench" id="bench"></div>
+    <div class="ctl">
+      <span class="hint" id="status">كل ضغطة على الأنبوب تضيف 3 قطرات.</span>
+      <button class="btn ghost" id="reset" type="button">↺ أنابيب جديدة</button>
+    </div>
+  </section>
+
+  <aside class="side">
+    <section class="card">
+      <div class="ctitle"><h2>عدسة الجسيمات</h2><span class="hint">الأنبوب المختار</span></div>
+      <div class="lens">
+        <div class="lensbox"><canvas id="cv" width="480" height="480"></canvas><div class="empty" id="lensEmpty">اضغط على أي أنبوب لترى الجسيمات داخله</div></div>
+        <div class="lenscap" id="lensCap"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </section>
+    <section class="card note">
+      <b>كيف أعرف أن تفاعلًا حدث؟</b><br>
+      إذا تغيّر لون المحلول إلى لون هالوجين <b>آخر</b> غير الذي أضفته، فقد تكوّن هالوجين جديد وحدث تفاعل إحلال. وإذا بقي اللون مثل لون أنبوب الماء المقطر فلا تفاعل، ونكتب <span class="ltr">NR</span>.
+    </section>
+  </aside>
+</main>
+<footer>محاكاة تعليمية مبسطة · الكيمياء التفاعلية · إعداد أ. عبير الخماش · الألوان تقريبية لمحاليل مخففة</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const HAL = {
+  Cl:{name:"ماء الكلور", f:"Cl₂", el:"الكلور", rank:1, col:[218,236,170], a:.55, ion:"#5BBF5A", mol:"#9AD86B"},
+  Br:{name:"ماء البروم", f:"Br₂", el:"البروم", rank:2, col:[236,140,40], a:.70, ion:"#B5562B", mol:"#E3863A"},
+  I: {name:"محلول اليود", f:"I₂", el:"اليود", rank:3, col:[122,62,24], a:.82, ion:"#7A4BB8", mol:"#8C5A2B"}
+};
+const TUBES = [
+  {id:"KCl", name:"كلوريد البوتاسيوم", f:"KCl", x:"Cl"},
+  {id:"KBr", name:"بروميد البوتاسيوم", f:"KBr", x:"Br"},
+  {id:"KI",  name:"يوديد البوتاسيوم", f:"KI",  x:"I"},
+  {id:"W",   name:"ماء مقطر", f:"H₂O", x:null, sub:"للمقارنة"}
+];
+const K_COL = "#9AA6BD";
+let picked = null, selTube = null;
+const state = {};
+function fresh(){ TUBES.forEach(t=>state[t.id]={hal:null, drops:0}); }
+fresh();
+
+/* ---------- chemistry ---------- */
+function result(t){ // what is in the tube now
+  const s = state[t.id]; if (!s.hal) return {color:null, reacted:false, formed:null};
+  const h = HAL[s.hal];
+  if (t.x && HAL[t.x].rank > h.rank) return {reacted:true, formed:t.x}; // more active halogen displaces
+  return {reacted:false, formed:s.hal};
+}
+function liquidColor(t){
+  const s = state[t.id]; if (!s.hal) return "rgba(214,234,248,.55)";
+  const r = result(t); const H = HAL[r.formed];
+  const k = Math.min(1, s.drops/9); const a = (.18 + .8*k) * H.a;
+  return `rgba(${H.col[0]},${H.col[1]},${H.col[2]},${a.toFixed(3)})`;
+}
+
+/* ---------- shelf ---------- */
+const shelf = document.getElementById("shelf");
+function bottleSVG(h){
+  const c = `rgba(${h.col[0]},${h.col[1]},${h.col[2]},${Math.min(1,h.a+.1)})`;
+  return `<svg viewBox="0 0 70 92" width="62" height="82" aria-hidden="true">
+    <rect x="26" y="2" width="18" height="14" rx="3" fill="#2B3A5E"/>
+    <rect x="29" y="14" width="12" height="10" fill="#CBD5E3"/>
+    <path d="M18 26 h34 a10 10 0 0 1 10 10 v46 a8 8 0 0 1 -8 8 h-38 a8 8 0 0 1 -8 -8 v-46 a10 10 0 0 1 10 -10z" fill="#EEF4FB" stroke="#B9C6D8" stroke-width="2"/>
+    <path d="M10 46 h50 v36 a8 8 0 0 1 -8 8 h-34 a8 8 0 0 1 -8 -8z" fill="${c}"/>
+    <rect x="16" y="52" width="38" height="20" rx="4" fill="#fff" opacity=".9"/>
+    <text x="35" y="66" text-anchor="middle" font-family="Tajawal" font-weight="800" font-size="12" fill="#14203B">${h.f}</text>
+  </svg>`;
+}
+Object.entries(HAL).forEach(([k,h])=>{
+  const b = document.createElement("button"); b.type="button"; b.className="bottle"; b.dataset.k=k;
+  b.setAttribute("aria-pressed","false");
+  b.innerHTML = bottleSVG(h) + `<div class="nm">${h.name}</div><div class="fm">${h.f}(aq)</div>`;
+  b.onclick = ()=>{ picked = (picked===k? null : k); paintShelf();
+    if (picked) toast(`اخترت ${h.name}. اضغط الآن على أنبوب لإضافة 3 قطرات.`); };
+  shelf.append(b);
+});
+function paintShelf(){
+  shelf.querySelectorAll(".bottle").forEach(b=>{ const on = b.dataset.k===picked; b.classList.toggle("sel",on); b.setAttribute("aria-pressed",on); });
+  document.getElementById("pickHint").textContent = picked ? `المختار: ${HAL[picked].name}` : "اختر الهالوجين الذي ستضيفه";
+}
+
+/* ---------- tubes ---------- */
+const bench = document.getElementById("bench");
+function tubeSVG(t){
+  return `<svg viewBox="0 0 80 190" aria-hidden="true">
+    <defs><clipPath id="cp-${t.id}"><path d="M22 18 v130 a18 18 0 0 0 36 0 v-130z"/></clipPath>
+    <linearGradient id="gl-${t.id}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".25" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <g clip-path="url(#cp-${t.id})">
+      <rect x="0" y="0" width="80" height="190" fill="#FAFCFF"/>
+      <rect class="liq" x="0" y="70" width="80" height="120" fill="rgba(214,234,248,.55)"/>
+      <ellipse class="meniscus" cx="40" cy="70" rx="18" ry="3" fill="rgba(255,255,255,.6)"/>
+      <rect x="22" y="0" width="36" height="190" fill="url(#gl-${t.id})"/>
+    </g>
+    <path d="M22 18 v130 a18 18 0 0 0 36 0 v-130" fill="none" stroke="#9FB0C8" stroke-width="2.5"/>
+    <rect x="16" y="12" width="48" height="8" rx="4" fill="#C9D5E5"/>
+  </svg>`;
+}
+TUBES.forEach(t=>{
+  const d = document.createElement("div"); d.className="tube"; d.dataset.id=t.id; d.tabIndex=0; d.setAttribute("role","button");
+  d.setAttribute("aria-label", `أنبوب ${t.name}`);
+  d.innerHTML = tubeSVG(t) + `<div class="tl"><span class="ltr">${t.f}</span><small>${t.name}${t.sub? " · "+t.sub : ""}</small></div><div class="tag" id="tag-${t.id}">لم يُضف شيء</div>`;
+  d.onclick = ()=>addTo(t, d);
+  d.onkeydown = e=>{ if (e.key==="Enter"||e.key===" "){ e.preventDefault(); addTo(t,d);} };
+  bench.append(d);
+});
+function paintTube(t){
+  const el = bench.querySelector(`[data-id="${t.id}"]`), s = state[t.id];
+  const level = 70 - Math.min(18, s.drops*1.4);
+  const liq = el.querySelector(".liq"), men = el.querySelector(".meniscus");
+  liq.setAttribute("y", level); men.setAttribute("cy", level);
+  liq.style.transition = "fill 1.2s ease"; liq.setAttribute("fill", liquidColor(t));
+  const tag = document.getElementById("tag-"+t.id);
+  if (s.hal){ tag.textContent = `+ ${HAL[s.hal].name} (${s.drops} قطرات)`; tag.classList.add("on"); }
+  else { tag.textContent = "لم يُضف شيء"; tag.classList.remove("on"); }
+  el.classList.toggle("sel", selTube===t.id);
+}
+function addTo(t, el){
+  selTube = t.id; TUBES.forEach(paintTube); showLens();
+  if (!picked){ toast("اختر هالوجينًا من رف المواد أولًا، أو شاهد الجسيمات في هذا الأنبوب."); return; }
+  const s = state[t.id];
+  if (s.hal && s.hal!==picked){ toast(`هذا الأنبوب فيه ${HAL[s.hal].name}. اضغط «أنابيب جديدة» لتجربة هالوجين آخر.`); return; }
+  if (s.drops>=12){ toast("الأنبوب ممتلئ بما يكفي للملاحظة."); return; }
+  animateDrops(picked, el, ()=>{ s.hal = picked; s.drops += 3; paintTube(t); showLens(true);
+    document.getElementById("status").textContent = `أضفت ${HAL[picked].name} إلى أنبوب ${t.f}. قارن لونه بلون أنبوب الماء المقطر.`; });
+}
+function animateDrops(k, el, done){
+  const h = HAL[k], svg = el.querySelector("svg").getBoundingClientRect();
+  const bx = svg.left + svg.width/2 - 6, by = svg.top - 40;
+  let n = 0;
+  const one = ()=>{ const d = document.createElement("div"); d.className="drop";
+    d.style.background = `rgba(${h.col[0]},${h.col[1]},${h.col[2]},${Math.min(1,h.a+.2)})`;
+    d.style.left = bx+"px"; d.style.top = by+"px"; document.body.append(d);
+    requestAnimationFrame(()=>{ d.style.transform = `translateY(${svg.height*0.42}px)`; });
+    setTimeout(()=>{ d.style.opacity = 0; setTimeout(()=>d.remove(), 250); }, 520);
+    if (++n < 3) setTimeout(one, 170); else setTimeout(done, 560); };
+  one();
+}
+document.getElementById("reset").onclick = ()=>{ fresh(); selTube=null; TUBES.forEach(paintTube); showLens();
+  document.getElementById("status").textContent = "أنابيب جديدة جاهزة. كل ضغطة على الأنبوب تضيف 3 قطرات."; toast("تم تجهيز أنابيب جديدة."); };
+
+/* ---------- particle lens ---------- */
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d"); ctx.direction = "ltr";
+let parts = [];
+function rnd(a,b){ return a + Math.random()*(b-a); }
+function mk(kind, color, label){ return {kind, color, label, x:rnd(80,400), y:rnd(80,400), vx:rnd(-.7,.7), vy:rnd(-.7,.7), a:rnd(0,6.28), va:rnd(-.02,.02), born:performance.now()}; }
+function buildParticles(animate){
+  const t = TUBES.find(x=>x.id===selTube); const prev = parts; parts = [];
+  if (!t) return;
+  const s = state[t.id], r = result(t);
+  const nX = 6, nAdd = s.hal ? Math.min(4, Math.ceil(s.drops/3)) : 0;
+  if (t.x){
+    const reactedCount = r.reacted ? nAdd*2 : 0; // each X2 added oxidises 2 X- ions
+    const hx = HAL[t.x], hs = s.hal ? HAL[s.hal] : null;
+    for (let i=0;i<nX;i++) parts.push(mk("K", K_COL, "K⁺"));
+    const remainingX = Math.max(0, nX - reactedCount);
+    for (let i=0;i<remainingX;i++) parts.push(mk("ion", hx.ion, t.x+"⁻"));
+    if (s.hal){
+      if (r.reacted){
+        const made = Math.min(nAdd, Math.floor(nX/2));
+        for (let i=0;i<made;i++) parts.push(mk("mol", hx.mol, t.x+"₂"));
+        for (let i=0;i<made*2;i++) parts.push(mk("ion", hs.ion, s.hal+"⁻"));
+        const left = nAdd - made; for (let i=0;i<left;i++) parts.push(mk("mol", hs.mol, s.hal+"₂"));
+      } else for (let i=0;i<nAdd;i++) parts.push(mk("mol", hs.mol, s.hal+"₂"));
+    }
+  } else if (s.hal){ for (let i=0;i<nAdd;i++) parts.push(mk("mol", HAL[s.hal].mol, s.hal+"₂")); }
+  for (let i=0;i<8;i++) parts.push(mk("w", "#B9D9F2", ""));
+}
+function showLens(animate){
+  const empty = document.getElementById("lensEmpty"), cap = document.getElementById("lensCap");
+  const t = TUBES.find(x=>x.id===selTube);
+  empty.style.display = t ? "none" : "grid";
+  buildParticles(animate);
+  if (!t){ cap.textContent=""; legend([]); return; }
+  const s = state[t.id], r = result(t);
+  cap.innerHTML = `أنبوب <span class="ltr">${t.f}</span>` + (s.hal ? ` + <span class="ltr">${HAL[s.hal].f}</span>` : "");
+  const L = [];
+  if (t.x){ L.push(["K", K_COL, "K⁺ أيون البوتاسيوم"]); L.push(["ion", HAL[t.x].ion, `${t.x}⁻ أيون ${HAL[t.x].el.replace("ال","")}يد`]); }
+  if (s.hal){
+    if (r.reacted){ L.push(["ion", HAL[s.hal].ion, `${s.hal}⁻ أيون ${HAL[s.hal].el.replace("ال","")}يد`]); L.push(["mol", HAL[t.x].mol, `${t.x}₂ جزيء ${HAL[t.x].el}`]); }
+    L.push(["mol", HAL[s.hal].mol, `${s.hal}₂ جزيء ${HAL[s.hal].el}`]);
+  }
+  L.push(["w", "#B9D9F2", "جزيء ماء"]);
+  legend(L.filter(([k,c,txt])=> k==="w" || parts.some(p=>p.label && txt.startsWith(p.label))));
+}
+function legend(L){
+  const g = document.getElementById("legend"); g.innerHTML = "";
+  const seen = new Set();
+  L.forEach(([k,c,txt])=>{ if (seen.has(txt)) return; seen.add(txt);
+    const d = document.createElement("div"); d.className="lg";
+    d.innerHTML = (k==="mol" ? `<span class="pair"><span class="dot" style="background:${c}"></span><span class="dot" style="background:${c}"></span></span>` :
+      `<span class="dot" style="background:${c};${k==="w"?"width:10px;height:10px":""}"></span>`) + `<span>${txt}</span>`;
+    g.append(d); });
+}
+function draw(){
+  ctx.clearRect(0,0,480,480);
+  ctx.fillStyle = "#F8FBFF"; ctx.fillRect(0,0,480,480);
+  const t = TUBES.find(x=>x.id===selTube);
+  if (t){ ctx.fillStyle = liquidColor(t).replace(/[\d.]+\)$/, m=> (Math.min(.22, parseFloat(m)*.35)).toFixed(3)+")"); ctx.fillRect(0,0,480,480); }
+  const now = performance.now();
+  for (const p of parts){
+    p.x += p.vx; p.y += p.vy; p.a += p.va;
+    if (p.x<50||p.x>430) p.vx*=-1; if (p.y<50||p.y>430) p.vy*=-1;
+    const fade = Math.min(1,(now-p.born)/600);
+    ctx.globalAlpha = fade;
+    if (p.kind==="w"){ ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,10,0,7); ctx.fill(); continue; }
+    if (p.kind==="mol"){
+      const dx = Math.cos(p.a)*30, dy = Math.sin(p.a)*30;
+      for (const s of [-1,1]){ ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x+dx*s/2,p.y+dy*s/2,22,0,7); ctx.fill(); ctx.strokeStyle="rgba(0,0,0,.18)"; ctx.lineWidth=2; ctx.stroke(); }
+      ctx.fillStyle="#fff"; ctx.font="800 21px Tajawal"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(p.label,p.x,p.y+1);
+      continue; }
+    const r = p.kind==="K" ? 22 : 27;
+    ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,7); ctx.fill(); ctx.strokeStyle="rgba(0,0,0,.18)"; ctx.lineWidth=2; ctx.stroke();
+    ctx.fillStyle="#fff"; ctx.font=`800 ${p.kind==="K"?19:21}px Tajawal`; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(p.label,p.x,p.y+1);
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ---------- toast ---------- */
+let tt; function toast(m){ const el = document.getElementById("toast"); el.textContent = m; el.classList.add("show"); clearTimeout(tt); tt = setTimeout(()=>el.classList.remove("show"), 2600); }
+TUBES.forEach(paintTube); paintShelf();
+</script>
+</body>
+</html>
