@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مختبر الذوبان · الطريقة العلمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F1C38;--navy2:#1B2B52;--teal:#39C2B2;--teal-d:#1A8F83;--mint:#7FE3D6;--ink:#14203B;--muted:#5B6A86;--line:#DCE5F0;--bench:#F4F7FB;--amber:#F2A73B;--ok:#1A8F83;--warn:#C0562B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bench);color:var(--ink);font-family:Tajawal,system-ui,sans-serif}
+button{font-family:inherit}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:18px 22px 16px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;inset:auto -60px -90px auto;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(57,194,178,.35),transparent 70%)}
+.hwrap{max-width:1140px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;position:relative;z-index:1}
+.kicker{color:var(--mint);font-weight:700;font-size:14px}
+h1{margin:2px 0 4px;font-size:clamp(22px,3.2vw,32px);font-weight:900}
+.sub{color:#C9D7E8;font-size:15px;margin:0}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 12px 6px 14px;font-size:14px}
+.step b{width:24px;height:24px;border-radius:50%;background:var(--teal-d);display:grid;place-items:center;font-size:13px}
+main{max-width:1140px;margin:0 auto;padding:16px 16px 28px;display:grid;grid-template-columns:1fr 330px;gap:16px}
+@media (max-width:920px){main{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 24px rgba(15,28,56,.06)}
+.ctitle{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.ctitle h2{margin:0;font-size:17px;font-weight:800}
+.hint{color:var(--muted);font-size:14px}
+.cups{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px}
+@media (max-width:560px){.cups{grid-template-columns:1fr}}
+.cup{border:2px solid var(--line);border-radius:16px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px}
+.cup h3{margin:0;font-size:17px;font-weight:900;display:flex;align-items:center;gap:8px}
+.cup h3 .pill{font-size:12.5px;font-weight:700;background:#EEF3F9;color:var(--muted);border-radius:999px;padding:1px 9px}
+.stage{display:flex;align-items:flex-end;justify-content:center;gap:10px;min-height:210px}
+.stage svg{width:150px;height:auto}
+.stage svg.thermo{width:30px;flex:none}
+.clock{font-weight:900;font-size:26px;text-align:center;direction:ltr;font-variant-numeric:tabular-nums;color:var(--navy)}
+.clock small{font-size:14px;color:var(--muted);font-weight:700}
+.status{text-align:center;font-weight:800;font-size:14.5px;min-height:22px}
+.status.done{color:var(--ok)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14.5px;font-weight:700}
+.row .val{min-width:66px;text-align:center;background:#F2F6FB;border-radius:10px;padding:3px 8px;direction:ltr}
+input[type=range]{width:100%;accent-color:var(--teal-d);height:28px}
+.seg{display:flex;background:#EEF3F9;border-radius:12px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:6px 10px;font-weight:800;font-size:14px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(15,28,56,.12)}
+.cup.locked .ctl{opacity:.5;pointer-events:none}
+.bar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:0 16px 14px}
+.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:800;font-size:16px;cursor:pointer}
+.btn.pri{background:var(--teal-d);color:#fff}
+.btn.ghost{background:#EEF3F9;color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.speed{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--muted)}
+.fair{margin:0 16px 14px;border-radius:14px;padding:10px 14px;font-size:14.5px;line-height:1.7;border:2px solid}
+.fair.ok{border-color:#BFE9E2;background:#F0FBF9}
+.fair.bad{border-color:#F6D2C2;background:#FFF6F1}
+.fair.none{border-color:var(--line);background:#F8FAFD}
+.fair b{font-weight:900}
+.side{display:flex;flex-direction:column;gap:16px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--navy);color:#fff;font-weight:700;padding:6px 6px;text-align:center}
+td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:center}
+td.t{font-weight:900;color:var(--teal-d);direction:ltr}
+.empty{color:var(--muted);text-align:center;padding:18px 10px;font-size:14px}
+.note{padding:12px 16px;font-size:14px;line-height:1.8;color:#33405E}
+.note b{color:var(--ink)}
+.vk{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:12px 16px;font-size:14px;line-height:1.6}
+.vk span:nth-child(odd){font-weight:900;white-space:nowrap}
+.vk .m{color:var(--teal-d)}.vk .d{color:#5B4BD6}.vk .c{color:#9A6B00}.vk .k{color:var(--warn)}
+footer{text-align:center;color:#8A96AD;font-size:12.5px;padding:0 16px 22px}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div>
+      <div class="kicker">الكيمياء التفاعلية · كيمياء 1 · الفصل 1 · الطرائق العلمية</div>
+      <h1>مختبر الذوبان: هل يذوب الملح أسرع في الماء الساخن؟</h1>
+      <p class="sub">اختبر الفرضية بتجربة عادلة: غيّر متغيرًا واحدًا، وثبّت الباقي، وقارن بالضابط</p>
+    </div>
+    <div class="steps" aria-label="طريقة الاستعمال">
+      <div class="step"><b>1</b>اضبط الكأسين</div>
+      <div class="step"><b>2</b>اضغط «أضف الملح»</div>
+      <div class="step"><b>3</b>سجّل زمن الذوبان</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card" aria-label="منضدة العمل">
+    <div class="ctitle"><h2>منضدة العمل</h2><span class="hint">كتلة الملح وحجم الماء والتحريك تُضبط لكل كأس</span></div>
+    <div class="cups" id="cups"></div>
+    <div class="fair none" id="fair"></div>
+    <div class="bar">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn pri" id="go" type="button">🧂 أضف الملح للكأسين</button>
+        <button class="btn ghost" id="reset" type="button">↺ تجربة جديدة</button>
+      </div>
+      <div class="speed">تسريع الزمن
+        <div class="seg" id="speed"><button type="button" data-s="1">×1</button><button type="button" data-s="6" class="on">×6</button><button type="button" data-s="20">×20</button></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="side">
+    <section class="card">
+      <div class="ctitle"><h2>سجل المحاولات</h2><span class="hint">يُضاف تلقائيًا</span></div>
+      <div id="log"><div class="empty">لم تُجرَ أي محاولة بعد</div></div>
+    </section>
+    <section class="card">
+      <div class="ctitle"><h2>أنواع المتغيرات</h2></div>
+      <div class="vk">
+        <span class="m">المستقل</span><span>المتغير الذي أغيّره بنفسي عن قصد.</span>
+        <span class="d">التابع</span><span>المتغير الذي أقيسه، ويتغير تبعًا للمستقل.</span>
+        <span class="c">الثابت</span><span>عامل أبقيه كما هو في الكأسين.</span>
+        <span class="k">الضابط</span><span>الكأس الذي أقارن به (ماء بدرجة حرارة الغرفة).</span>
+      </div>
+    </section>
+  </aside>
+</main>
+<footer>محاكاة تعليمية مبسطة · الكيمياء التفاعلية · إعداد أ. عبير الخماش · الأزمنة محسوبة لتوافق مثال الكتاب: 3 دقائق عند <span class="ltr">20 °C</span>، ودقيقة عند <span class="ltr">40 °C</span></footer>
+
+<script>
+/* ---- model: time (s) to dissolve completely ---- */
+function dissolveTime(c){
+  const k = Math.log(3)/20;               // 20°C → 180 s, 40°C → 60 s (book example)
+  let t = 180 * Math.exp(-k*(c.T-20));
+  t *= c.m/5;                              // more salt → longer
+  t *= Math.sqrt(100/c.V);                 // more water → a bit faster
+  if (c.stir) t *= 0.5;                    // stirring → faster
+  return Math.max(4, Math.round(t));
+}
+const DEF = ()=>({T:20, m:5, V:100, stir:false});
+const cups = [{id:"A", name:"الكأس أ", s:DEF()}, {id:"B", name:"الكأس ب", s:{...DEF(), T:40}}];
+let running=false, speed=6, raf=null, simT=0, last=0, trial=0;
+const LOG=[];
+
+/* ---- build cups ---- */
+const host=document.getElementById("cups");
+function beakerSVG(id){
+  return `<svg viewBox="0 0 160 200" aria-hidden="true">
+   <defs><clipPath id="bk-${id}"><path d="M28 30 L36 182 Q37 190 46 190 L114 190 Q123 190 124 182 L132 30 Z"/></clipPath></defs>
+   <g clip-path="url(#bk-${id})">
+     <rect x="0" y="0" width="160" height="200" fill="#FAFCFF"/>
+     <rect class="water" x="0" y="70" width="160" height="130" fill="#CFE6F7"/>
+     <g class="salt"></g>
+     <g class="rod" style="display:none"><rect x="76" y="20" width="7" height="160" rx="3" fill="#B98A57" transform="rotate(8 80 110)"/></g>
+   </g>
+   <path d="M24 26 L28 30 L36 182 Q37 190 46 190 L114 190 Q123 190 124 182 L132 30 L136 26" fill="none" stroke="#9FB0C8" stroke-width="3"/>
+   ${[60,90,120,150].map(y=>`<line x1="118" x2="128" y1="${y}" y2="${y}" stroke="#B9C6D8" stroke-width="2"/>`).join("")}
+  </svg>`;
+}
+function thermoSVG(){
+  return `<svg class="thermo" viewBox="0 0 30 200" aria-hidden="true">
+    <rect x="10" y="8" width="10" height="160" rx="5" fill="#fff" stroke="#9FB0C8" stroke-width="2"/>
+    <rect class="merc" x="13" y="150" width="4" height="20" rx="2" fill="#E2553B"/>
+    <circle cx="15" cy="178" r="12" fill="#E2553B" stroke="#9FB0C8" stroke-width="2"/></svg>`;
+}
+cups.forEach((c,i)=>{
+  const d=document.createElement("div"); d.className="cup"; d.id="cup-"+c.id;
+  d.innerHTML=`<h3>${c.name} <span class="pill" id="role-${c.id}"></span></h3>
+   <div class="stage">${thermoSVG()}${beakerSVG(c.id)}</div>
+   <div class="clock" id="clk-${c.id}">0 <small>s</small></div>
+   <div class="status" id="st-${c.id}">جاهز</div>
+   <div class="ctl">
+    <div class="row"><span>🌡️ درجة حرارة الماء</span><span class="val" id="vT-${c.id}"></span></div>
+    <input type="range" min="10" max="80" step="5" id="T-${c.id}" aria-label="درجة حرارة ${c.name}">
+    <div class="row"><span>🧂 كتلة الملح</span><div class="seg" data-k="m">${[5,10].map(v=>`<button type="button" dir="ltr" data-v="${v}">${v} g</button>`).join("")}</div></div>
+    <div class="row"><span>💧 حجم الماء</span><div class="seg" data-k="V">${[100,200].map(v=>`<button type="button" dir="ltr" data-v="${v}">${v} mL</button>`).join("")}</div></div>
+    <div class="row"><span>🥄 التحريك</span><div class="seg" data-k="stir"><button type="button" data-v="0">بدون</button><button type="button" data-v="1">مع تحريك</button></div></div>
+   </div>`;
+  host.append(d);
+  const r=d.querySelector(`#T-${c.id}`); r.value=c.s.T;
+  r.oninput=()=>{ c.s.T=+r.value; paint(); };
+  d.querySelectorAll(".seg").forEach(sg=>{ sg.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    const k=sg.dataset.k; c.s[k]= k==="stir" ? b.dataset.v==="1" : +b.dataset.v; paint(); }); });
+  c.salt=[]; for(let j=0;j<46;j++) c.salt.push({x:50+Math.random()*60, y:178+Math.random()*8 - (j%4)*3, s:4.5+Math.random()*3.5, r:Math.random()*40});
+});
+function waterColor(T){ const a=(T-10)/70; const r=Math.round(207+a*28), g=Math.round(230-a*14), b=Math.round(247-a*34); return `rgb(${r},${g},${b})`; }
+function paint(){
+  cups.forEach(c=>{
+    const d=document.getElementById("cup-"+c.id), s=c.s;
+    document.getElementById("vT-"+c.id).textContent=s.T+" °C";
+    d.querySelectorAll(".seg").forEach(sg=>{ const k=sg.dataset.k; sg.querySelectorAll("button").forEach(b=>{
+      const v = k==="stir" ? (b.dataset.v==="1")===s.stir : +b.dataset.v===s[k]; b.classList.toggle("on",v); }); });
+    const level = s.V===200 ? 52 : 100;
+    const w=d.querySelector(".water"); w.setAttribute("y",level); w.setAttribute("fill",waterColor(s.T));
+    const merc=d.querySelector(".merc"); const h=20+ (s.T-10)/70*128; merc.setAttribute("y",170-h); merc.setAttribute("height",h);
+    d.querySelector(".rod").style.display = s.stir ? "" : "none";
+    d.classList.toggle("locked", running);
+  });
+  fairCheck(); roles(); drawSalt();
+}
+function roles(){
+  const [a,b]=cups; const ra=document.getElementById("role-A"), rb=document.getElementById("role-B");
+  ra.textContent = a.s.T===20 ? "ضابط: حرارة الغرفة" : ""; rb.textContent = b.s.T===20 ? "ضابط: حرارة الغرفة" : "";
+}
+const NAMES={T:"درجة الحرارة", m:"كتلة الملح", V:"حجم الماء", stir:"التحريك"};
+function fairCheck(){
+  const [a,b]=cups, diff=Object.keys(NAMES).filter(k=>a.s[k]!==b.s[k]);
+  const same=Object.keys(NAMES).filter(k=>a.s[k]===b.s[k]).map(k=>NAMES[k]);
+  const f=document.getElementById("fair");
+  if (!diff.length){ f.className="fair none"; f.innerHTML="الكأسان متطابقان تمامًا. غيّر عاملًا واحدًا في أحدهما لتختبر أثره."; return; }
+  if (diff.length===1){ f.className="fair ok"; f.innerHTML=`✅ <b>تجربة عادلة:</b> المتغير المستقل هو <b>${NAMES[diff[0]]}</b>، والعوامل الثابتة: ${same.join("، ")}.`; return; }
+  f.className="fair bad"; f.innerHTML=`⚠️ <b>تجربة غير عادلة:</b> غيّرت أكثر من عامل في الوقت نفسه (${diff.map(k=>NAMES[k]).join("، ")}). لن تعرف أيها سبّب الفرق في زمن الذوبان.`;
+}
+/* ---- salt drawing ---- */
+function drawSalt(){
+  cups.forEach(c=>{
+    const g=document.querySelector(`#cup-${c.id} .salt`); const p = c.prog||0;
+    if (!c.added){ g.innerHTML=""; return; }
+    const n = Math.round(c.salt.length * (c.s.m/10) * (1-p));
+    let html=""; for (let i=0;i<n;i++){ const q=c.salt[i]; const sz=q.s*(1-p*0.6);
+      html+=`<rect x="${q.x}" y="${q.y-sz}" width="${sz}" height="${sz}" rx="1" fill="#fff" stroke="#AFC2D8" stroke-width=".8" transform="rotate(${q.r} ${q.x} ${q.y})"/>`; }
+    if (c.stir && p<1 && running) html += `<circle cx="${80+Math.cos(simT*3)*22}" cy="${150+Math.sin(simT*3)*6}" r="2.5" fill="#fff" opacity=".8"/>`;
+    g.innerHTML=html;
+  });
+}
+/* ---- run ---- */
+const speedSeg=document.getElementById("speed");
+speedSeg.querySelectorAll("button").forEach(b=>b.onclick=()=>{ speed=+b.dataset.s; speedSeg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b)); });
+document.getElementById("go").onclick=()=>{
+  if (running) return;
+  running=true; simT=0; trial++;
+  cups.forEach(c=>{ c.tt=dissolveTime(c.s); c.prog=0; c.added=true; c.done=false; c.stir=c.s.stir;
+    document.getElementById("st-"+c.id).textContent="يذوب الملح…"; document.getElementById("st-"+c.id).className="status"; });
+  document.getElementById("go").disabled=true; paint(); last=performance.now(); raf=requestAnimationFrame(tick);
+};
+function tick(now){
+  const dt=(now-last)/1000*speed; last=now; simT+=dt;
+  let all=true;
+  cups.forEach(c=>{
+    if (c.done) return;
+    c.prog=Math.min(1, simT/c.tt);
+    document.getElementById("clk-"+c.id).innerHTML=`${Math.floor(Math.min(simT,c.tt))} <small>s</small>`;
+    if (c.prog>=1){ c.done=true; const st=document.getElementById("st-"+c.id); st.textContent=`✔ ذاب الملح كله في ${c.tt} ثانية`; st.className="status done";
+      document.getElementById("clk-"+c.id).innerHTML=`${c.tt} <small>s</small>`;
+      LOG.push({n:trial, cup:c.name, ...c.s, t:c.tt}); renderLog(); }
+    else all=false;
+  });
+  drawSalt();
+  if (!all) raf=requestAnimationFrame(tick); else { running=false; document.getElementById("go").disabled=false; paint(); }
+}
+document.getElementById("reset").onclick=()=>{
+  cancelAnimationFrame(raf); running=false; simT=0;
+  cups.forEach(c=>{ c.prog=0; c.added=false; c.done=false; document.getElementById("clk-"+c.id).innerHTML="0 <small>s</small>";
+    const st=document.getElementById("st-"+c.id); st.textContent="جاهز"; st.className="status"; });
+  document.getElementById("go").disabled=false; paint();
+};
+function renderLog(){
+  const el=document.getElementById("log");
+  el.innerHTML=`<table><thead><tr><th>#</th><th>الكأس</th><th><span class="ltr">°C</span></th><th>g</th><th>mL</th><th>تحريك</th><th>الزمن</th></tr></thead><tbody>${
+    LOG.slice().reverse().map(r=>`<tr><td>${r.n}</td><td>${r.cup}</td><td>${r.T}</td><td>${r.m}</td><td>${r.V}</td><td>${r.stir?"نعم":"لا"}</td><td class="t">${r.t} s</td></tr>`).join("")}</tbody></table>`;
+}
+paint();
+</script>
+</body>
+</html>
